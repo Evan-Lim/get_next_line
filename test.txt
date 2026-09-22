@@ -1,0 +1,6 @@
+Hello, world!
+This is a test file for get_next_line.
+
+It has an empty line above to test consecutive newlines.
+And a very long line here to ensure that your buffer size does not truncate data when BUFFER_SIZE is set to a very small number like 1.
+This last line does not end with a newline.
