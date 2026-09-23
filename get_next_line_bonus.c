@@ -6,7 +6,7 @@
 /*   By: elim-hon <elim-hon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/22 08:04:53 by elim-hon          #+#    #+#             */
-/*   Updated: 2026/09/22 10:23:14 by elim-hon         ###   ########.fr       */
+/*   Updated: 2026/09/23 07:56:51 by elim-hon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,10 @@ static char	*update_string(char *str)
 	i++;
 	rest = (char *)malloc(sizeof(char) * (ft_strlen(str) - i + 1));
 	if (!rest)
+	{
+		free(str);
 		return (NULL);
+	}
 	j = 0;
 	while (str[i])
 		rest[j++] = str[i++];
@@ -131,40 +134,35 @@ char	*get_next_line(int fd)
 /*
 #include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include "get_next_line_bonus.h"
 
 int	main(void)
 {
-	int		fd1;
-	int		fd2;
-	char	*line1;
-	char	*line2;
+	int		a[2];
+	int		b[2];
+	char	*la; 
+	char	*lb;
 
-	fd1 = open("file1.txt", O_RDONLY);
-	fd2 = open("file2.txt", O_RDONLY);
-	if (fd1 == -1 || fd2 == -1)
+	pipe(a); 
+	pipe(b);
+	write(a[1], "A1\nA2\nA3\n", 9);   close(a[1]);
+	write(b[1], "B1\nB2\nB3\nB4\n", 12); close(b[1]);
+	la = get_next_line(a[0]);
+	lb = get_next_line(b[0]);
+	while (la || lb)
 	{
-		printf("Error opening files\n");
-		return (1);
+		printf("A=[%s]\nB=[%s]\n", la ? la : "(null)\n", lb ? lb : "(null)\n");
+		printf("[SEP]\n");
+		free(la); 
+		free(lb);
+		la = get_next_line(a[0]);
+		lb = get_next_line(b[0]);
 	}
-	while (1)
-	{
-		line1 = get_next_line(fd1);
-		line2 = get_next_line(fd2);
-		if (!line1 && !line2)
-			break ;
-		if (line1)
-		{
-			printf("FD 1: %s", line1);
-			free(line1);
-		}
-		if (line2)
-		{
-			printf("FD 2: %s", line2);
-			free(line2);
-		}
-	}
-	close(fd1);
-	close(fd2);
+	close(a[0]); 
+	close(b[0]);
 	return (0);
 }
 */

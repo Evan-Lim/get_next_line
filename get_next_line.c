@@ -6,7 +6,7 @@
 /*   By: elim-hon <elim-hon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/22 08:04:53 by elim-hon          #+#    #+#             */
-/*   Updated: 2026/09/22 09:56:56 by elim-hon         ###   ########.fr       */
+/*   Updated: 2026/09/23 07:56:35 by elim-hon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,10 @@ static char	*update_string(char *str)
 	i++;
 	rest = (char *)malloc(sizeof(char) * (ft_strlen(str) - i + 1));
 	if (!rest)
+	{
+		free(str);
 		return (NULL);
+	}
 	j = 0;
 	while (str[i])
 		rest[j++] = str[i++];
@@ -131,25 +134,26 @@ char	*get_next_line(int fd)
 /*
 #include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include "get_next_line.h"
 
 int	main(void)
 {
-	int		fd;
+	int		p[2];
 	char	*line;
 
-	fd = open("test.txt", O_RDONLY);
-	if (fd == -1)
+	pipe(p);
+	write(p[1], "hello\nworld\nno nl", 18);
+	close(p[1]);
+	while ((line = get_next_line(p[0])) != NULL)
 	{
-		printf("Error opening file\n");
-		return (1);
-	}
-	while ((line = get_next_line(fd)) != NULL)
-	{
-		printf("%s", line);
-		printf("[NL]\n");
+		printf("[%s]\n", line);
+		printf("[SEP]\n");
 		free(line);
 	}
-	close(fd);
+	close(p[0]);
 	return (0);
 }
 */
